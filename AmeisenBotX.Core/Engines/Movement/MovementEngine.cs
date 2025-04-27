@@ -267,7 +267,7 @@ namespace AmeisenBotX.Core.Engines.Movement
                 {
                     CurrentSpeed = LastPosition.GetDistance2D(Bot.Player.Position) / (float)(DateTime.UtcNow - LastMovement).TotalSeconds;
 
-                    if (CurrentSpeed is > 0.0f and <= 0.9f)
+                    if (CurrentSpeed is > 0.0f and <= 0.8f)
                     {
                         // soft stuck
                         Bot.Character.Jump();
