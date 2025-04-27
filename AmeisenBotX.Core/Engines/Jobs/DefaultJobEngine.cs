@@ -339,7 +339,7 @@ namespace AmeisenBotX.Core.Engines.Jobs
                     if (!Bot.Player.IsCasting)
                     {
                         Bot.Movement.StopMovement();
-                        Bot.HookManager.LuaDoString($"InteractWithMouseOver();");
+                        Bot.Wow.InteractWithObject(node);
                     }
                 }
             }
