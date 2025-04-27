@@ -557,6 +557,7 @@ namespace AmeisenBotX.Core
                 new CopperElwynnForestProfile(),
                 new CopperTinSilverWestfallProfile(),
                 new ElwynnRedridgeMining(),
+                new HerbTerokkarProfile(),
             };
         }
 
