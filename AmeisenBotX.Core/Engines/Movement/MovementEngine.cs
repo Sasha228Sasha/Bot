@@ -1,4 +1,4 @@
-﻿using AmeisenBotX.Common.Math;
+using AmeisenBotX.Common.Math;
 using AmeisenBotX.Common.Utils;
 using AmeisenBotX.Core.Engines.Movement.Enums;
 using AmeisenBotX.Core.Engines.Movement.Objects;
@@ -267,7 +267,7 @@ namespace AmeisenBotX.Core.Engines.Movement
                 {
                     CurrentSpeed = LastPosition.GetDistance2D(Bot.Player.Position) / (float)(DateTime.UtcNow - LastMovement).TotalSeconds;
 
-                    if (CurrentSpeed is > 0.0f and < 0.1f)
+                    if (CurrentSpeed is > 0.0f and <= 0.9f)
                     {
                         // soft stuck
                         Bot.Character.Jump();
@@ -275,7 +275,7 @@ namespace AmeisenBotX.Core.Engines.Movement
 
                     if (IsUnstucking)
                     {
-                        if ((CurrentSpeed > 1.0f && UnstuckTarget.GetDistance(Bot.Player.Position) <= Config.MovementSettings.WaypointCheckThreshold) || UnstuckTarget == Vector3.Zero)
+                        if ((CurrentSpeed >= 1.0f && UnstuckTarget.GetDistance(Bot.Player.Position) <= Config.MovementSettings.WaypointCheckThreshold) || UnstuckTarget == Vector3.Zero)
                         {
                             IsUnstucking = false;
                             UnstuckTarget = Vector3.Zero;
@@ -283,7 +283,7 @@ namespace AmeisenBotX.Core.Engines.Movement
                     }
                     else
                     {
-                        if (CurrentSpeed == 0.0f)
+                        if (CurrentSpeed <= 0.7f)
                         {
                             IsUnstucking = true;
                             UnstuckTarget = Bot.PathfindingHandler.GetRandomPointAround((int)Bot.Objects.MapId, Bot.Player.Position, 6.0f);
