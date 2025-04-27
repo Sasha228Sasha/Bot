@@ -159,7 +159,7 @@ namespace AmeisenBotX.Common.Utils
             SendMessage(windowHandle, WM_KEYUP, key, nint.Zero);
         }
 
-        [LibraryImport("user32", ExactSpelling = true)]
+        [LibraryImport("user32", EntryPoint = "SendMessageA")]
         private static partial nint SendMessage(nint windowHandle, uint msg, nint param, nint parameter);
     }
 }
