@@ -47,6 +47,8 @@ namespace AmeisenBotX.Core.Engines.Jobs
         private TimegatedEvent MailSentEvent { get; }
 
         private TimegatedEvent MiningEvent { get; }
+        
+        private TimegatedEvent HerbalismEvent { get; }
 
         private int NodeTryCounter { get; set; }
 
@@ -336,7 +338,7 @@ namespace AmeisenBotX.Core.Engines.Jobs
                 }
                 else
                 {
-                    if (!Bot.Player.IsCasting)
+                    if (!Bot.Player.IsCasting && HerbalismEvent.Run())
                     {
                         Bot.Movement.StopMovement();
                         Bot.Wow.InteractWithObject(node);
