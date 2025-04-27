@@ -71,6 +71,10 @@ namespace AmeisenBotX.Core.Engines.Jobs
                     case JobType.Mining:
                         ExecuteMining((IMiningProfile)Profile);
                         break;
+                        
+                    case JobType.Herbalism:
+                        ExecuteHerbalism((IHerbalismProfile)Profile);
+                        break;
                 }
             }
         }
@@ -262,6 +266,81 @@ namespace AmeisenBotX.Core.Engines.Jobs
                     }
 
                     ++NodeTryCounter;
+                }
+            }
+        }
+        private void ExecuteHerbalism(IHerbalismProfile herbalismProfile)
+        {
+            if (Bot.Player.IsCasting)
+            {
+                return;
+            }
+
+            if (CheckForPathRecovering)
+            {
+                Vector3 closestNode = herbalismProfile.Path.OrderBy(e => e.GetDistance(Bot.Player.Position)).First();
+                CurrentNodeCounter = herbalismProfile.Path.IndexOf(closestNode) + 1;
+                CheckForPathRecovering = false;
+                NodeTryCounter = 0;
+            }
+
+            if (SelectedGuid == 0)
+            {
+                IWowGameobject nearestNode = Bot.Objects.All.OfType<IWowGameobject>()
+                    .Where(e => !NodeBlacklist.Contains(e.Guid)
+                             && Enum.IsDefined(typeof(WowHerbId), e.DisplayId)
+                             && herbalismProfile.HerbTypes.Contains((WowHerbId)e.DisplayId))
+                    .OrderBy(x => x.Position.GetDistance(Bot.Player.Position))
+                    .FirstOrDefault();
+
+                if (nearestNode != null)
+                {
+                    SelectedPosition = nearestNode.Position;
+                    SelectedGuid = nearestNode.Guid;
+                }
+                else
+                {
+                    Vector3 currentNode = herbalismProfile.Path[CurrentNodeCounter];
+                    Bot.Movement.SetMovementAction(MovementAction.Move, currentNode);
+
+                    if (Bot.Player.Position.GetDistance(currentNode) < 3.0f)
+                    {
+                        ++CurrentNodeCounter;
+
+                        if (CurrentNodeCounter >= herbalismProfile.Path.Count)
+                        {
+                            if (!herbalismProfile.IsCirclePath)
+                            {
+                                herbalismProfile.Path.Reverse();
+                            }
+
+                            CurrentNodeCounter = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                double distanceToNode = Bot.Player.Position.GetDistance(SelectedPosition);
+                IWowGameobject node = Bot.GetWowObjectByGuid<IWowGameobject>(SelectedGuid);
+
+                if (node == null)
+                {
+                    SelectedGuid = 0;
+                    return;
+                }
+
+                if (distanceToNode > 3.0f)
+                {
+                    Bot.Movement.SetMovementAction(MovementAction.Move, SelectedPosition);
+                }
+                else
+                {
+                    if (!Bot.Player.IsCasting)
+                    {
+                        Bot.Movement.StopMovement();
+                        Bot.HookManager.LuaDoString($"InteractWithMouseOver();");
+                    }
                 }
             }
         }
