@@ -24,6 +24,7 @@ namespace AmeisenBotX.Core.Engines.Jobs
             Config = config;
 
             MiningEvent = new(TimeSpan.FromSeconds(1));
+            HerbalismEvent = new(TimeSpan.FromSeconds(1));
             BlacklistEvent = new(TimeSpan.FromSeconds(1));
             MailSentEvent = new(TimeSpan.FromSeconds(3));
 
