@@ -2,6 +2,7 @@
 {
     public enum JobType
     {
-        Mining
+        Mining,
+        Herbalism
     }
 }
